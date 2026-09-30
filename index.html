@@ -170,7 +170,8 @@ body::before{content:'';position:fixed;inset:0;
     <div class="axis-list">
       <div class="axis-row"><span class="axis-tag" style="background:rgba(143,184,232,.18);color:#8FB8E8">結果</span><span>親しみと存在感、6つの要素から導く、あなたの魅力タイプ</span></div>
       <div class="axis-row"><span class="axis-tag" style="background:rgba(143,184,232,.18);color:#8FB8E8">行動</span><span>魅力をもう一段引き出す、具体的な手順3つ（いちばん眠っている1か所だけ）</span></div>
-      <div class="axis-row"><span class="axis-tag" style="background:rgba(143,184,232,.18);color:#8FB8E8">場面</span><span>初対面／職場や学校／恋愛 の3場面での見え方</span></div>
+      <div class="axis-row"><span class="axis-tag" style="background:rgba(143,184,232,.18);color:#8FB8E8">場面</span><span>初対面／職場や学校／恋愛や気になる人の前 の3場面での見え方</span></div>
+      <div class="axis-row"><span class="axis-tag" style="background:rgba(143,184,232,.18);color:#8FB8E8">内心</span><span>あなたのことを、周りがたぶん思っていること</span></div>
     </div>
   </div>
 
@@ -375,7 +376,7 @@ const SCENES=[
    LH:'できる人として一目置かれますが、少し距離を感じられがちです。雑談を一つ増やすだけで、周りの反応が変わります。',
    LM:'何を考えているのか、周りがつかみかねている位置です。自分の考えを一言だけ先に言うと、信頼が早く積み上がります。',
    LL:'まだ周りがあなたの良さを知らない段階です。小さな仕事を一つやり切って見せるのが、いちばんの近道です。'}},
- {name:'恋愛や、気になる人の前', map:{
+ {name:'恋愛や気になる人の前', map:{
    HH:'尊敬と親しみを同時に向けられやすい位置です。ときどき弱いところも見せると、相手との距離がさらに縮まります。',
    HM:'「一緒にいると落ち着く人」として、長く大切にされやすい位置です。ときどき自分の希望を言うと、恋愛の空気が生まれます。',
    HL:'相手が守りたくなる、かまいたくなる位置です。自分の好きなものを語ると、「かわいい」に「気になる」が加わります。',
@@ -493,6 +494,13 @@ function showResult(){
    + '<div class="micro">※ あなたのスコアから逆算した「そう感じられやすい」という目安です。実際に言われた言葉ではありません。</div>'
    + '</div>';
 
+  h+='<div class="sec"><div class="sec-label">3つの場面での見え方</div><div class="step">';
+  SCENES.forEach(function(sc2){
+    h+='<div class="step-row"><div class="step-num" style="background:rgba(242,167,184,.15);color:#F2A7B8">◇</div>'
+     + '<div class="step-txt"><b>'+sc2.name+'</b>'+sc2.map[key]+'</div></div>';
+  });
+  h+='</div></div>';
+
   h+='<div class="map-wrap">'
    + '<div class="map-axis-y">↑ 存在感（自分の軸が外に出ているか）</div>'
    + '<div class="map">'
@@ -547,7 +555,7 @@ function showResult(){
   h+='<div class="sec"><div class="sec-label">6つの内訳 — どこが魅力として出ているか</div><div class="sub-list">';
   SUB_ORDER.forEach(function(k){
     const s=SUB[k], v=sc.sub[k], col=AX[s.ax].color;
-    const mark = flat ? '' : (k===low ? '<span class="sub-flag low">いちばん低い</span>' : (k===high ? '<span class="sub-flag high">いちばん高い</span>' : ''));
+    const mark = flat ? '' : (k===low ? '<span class="sub-flag low">いちばん眠っている</span>' : (k===high ? '<span class="sub-flag high">いちばん出ている</span>' : ''));
     h+='<div class="sub-row">'
      + '<div class="sub-head"><span class="sub-name"><span class="sub-ax" style="color:'+col+'">'+AX[s.ax].name+'</span>'+s.name+'</span>'
      + '<span class="sub-val" style="color:'+col+'">'+v+'</span></div>'
@@ -566,12 +574,6 @@ function showResult(){
   t.scene.forEach(function(s){ h+='<div class="scene-row"><span class="scene-mark">●</span><span>'+s+'</span></div>'; });
   h+='</div></div>';
 
-  h+='<div class="sec"><div class="sec-label">場面別の見え方</div><div class="step">';
-  SCENES.forEach(function(sc2){
-    h+='<div class="step-row"><div class="step-num" style="background:rgba(242,167,184,.15);color:#F2A7B8">◇</div>'
-     + '<div class="step-txt"><b>'+sc2.name+'</b>'+sc2.map[key]+'</div></div>';
-  });
-  h+='</div></div>';
 
   h+='<div class="sec"><div class="sec-label">いま効いているもの</div><div class="sec-body">'
    + (flat ? '6つの要素が、ほぼ同じ高さにそろっています（いちばん高い要素と低い要素の差が10点未満）。突出も欠けもない状態です。まずはどれか一つを選んで伸ばすと、見え方に輪郭が出ます。' : STRENGTH[high])
