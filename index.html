@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>魅力タイプ診断 — かわいい系？かっこいい系？癒し系？ | ジブンwoカシカ</title>
+<meta name="description" content="あなたの魅力は、かわいい系？かっこいい系？癒し系？ 心理学の「親しみ（親和性）」と「存在感（主体性）」の2軸から、20問・3分で可視化します。"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05080f;--surface:#0a0f1a;--surface2:#101725;
+  --border:rgba(120,180,255,0.09);--border2:rgba(120,180,255,0.18);
+  --text:#e6edf8;--muted:#5a6a85;--faint:#141c2b;
+  --warm:#E8734A;--warm2:#B94E2C;--cool:#4AA8E8;--cool2:#2C72B9;--cream:#FFD9A0;
+}
+html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;-webkit-text-size-adjust:100%}
+body::before{content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse 50% 40% at 78% 12%,rgba(232,115,74,0.07),transparent),
+             radial-gradient(ellipse 45% 50% at 12% 88%,rgba(74,168,232,0.06),transparent);
+  pointer-events:none;z-index:0}
+.app{max-width:600px;margin:0 auto;padding:0 1.2rem 5rem;position:relative;z-index:1}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+.fade-in{animation:fadeUp .5s cubic-bezier(.22,.68,0,1.1) forwards}
+
+/* TOP */
+.top{padding:3.2rem 0 2rem}
+.top-eye{font-size:.64rem;letter-spacing:.24em;color:var(--muted);margin-bottom:1rem;text-transform:uppercase;text-align:center}
+.top h1{font-size:1.5rem;font-weight:700;line-height:1.55;color:#fff;margin-bottom:.7rem;text-align:center;letter-spacing:.02em}
+.top-sub{font-size:.66rem;letter-spacing:.16em;color:var(--muted);margin-bottom:2.2rem;text-align:center}
+.intro-body{font-size:.87rem;line-height:2.05;color:#93a3bd;margin-bottom:1.5rem}
+.intro-body p{margin-bottom:.95rem}
+.intro-body em{color:var(--warm);font-style:normal;font-weight:500}
+.hook{border-left:2px solid var(--warm2);padding-left:1.2rem;margin:1.3rem 0;font-size:.87rem;line-height:1.95;color:#b3c0d6}
+.axis-box{background:var(--surface);border:.5px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:1.4rem}
+.axis-box h4{font-size:.67rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.9rem}
+.axis-list{display:flex;flex-direction:column;gap:.6rem}
+.axis-row{display:flex;align-items:flex-start;gap:.8rem;font-size:.8rem;line-height:1.75;color:#8494ae}
+.axis-tag{font-size:.65rem;font-weight:700;padding:2px 9px;border-radius:20px;flex-shrink:0;margin-top:2px;white-space:nowrap}
+.warn-box{background:rgba(232,115,74,.05);border:.5px solid rgba(232,115,74,.18);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.5rem;font-size:.78rem;color:#8494ae;line-height:1.85}
+.btn-start{width:100%;padding:1.05rem;font-size:.98rem;font-weight:700;letter-spacing:.08em;border-radius:12px;border:none;background:linear-gradient(135deg,var(--warm),var(--warm2));color:#fff;cursor:pointer;transition:.25s;font-family:'Noto Sans JP',sans-serif}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(232,115,74,.3)}
+
+/* QUIZ */
+.quiz-wrap{padding-top:2.2rem}
+.prog-wrap{margin-bottom:1.6rem}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.55rem}
+.axis-pill{font-size:.66rem;font-weight:700;padding:3px 11px;border-radius:20px;letter-spacing:.06em}
+.q-cnt{font-size:.7rem;color:var(--muted)}
+.prog-bar{height:2.5px;background:var(--faint);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--warm2),var(--warm),var(--cream));border-radius:2px;transition:width .4s ease}
+.basis-note{font-size:.63rem;color:var(--muted);text-align:right;margin-top:.45rem;letter-spacing:.05em}
+.q-card{background:var(--surface);border:.5px solid var(--border);border-radius:14px;padding:1.5rem 1.4rem;margin-bottom:1.2rem}
+.q-text{font-size:.97rem;line-height:1.85;color:#fff;font-weight:500}
+.opts{display:flex;flex-direction:column;gap:.5rem}
+.opt-btn{width:100%;padding:.82rem 1rem;font-size:.85rem;font-family:'Noto Sans JP',sans-serif;border:.5px solid var(--border);border-radius:9px;background:var(--surface);color:#8494ae;cursor:pointer;text-align:left;transition:.18s}
+.opt-btn:hover{border-color:var(--border2);color:var(--text);background:var(--surface2)}
+.opt-btn.selected{border-color:var(--warm);color:#fff;background:rgba(232,115,74,.12)}
+.nav-row{display:flex;justify-content:flex-start;margin-top:1.2rem}
+.btn-prev{padding:.6rem 1.1rem;font-size:.76rem;font-family:'Noto Sans JP',sans-serif;border:.5px solid var(--border);border-radius:8px;background:transparent;color:var(--muted);cursor:pointer}
+.btn-prev:hover{color:var(--text);border-color:var(--border2)}
+
+/* LOADING */
+.loading{padding:6rem 0;text-align:center}
+.spinner{width:34px;height:34px;border:2px solid var(--faint);border-top-color:var(--warm);border-radius:50%;margin:0 auto 1.4rem;animation:spin .9s linear infinite}
+.loading p{font-size:.8rem;color:var(--muted);letter-spacing:.1em;animation:pulse 1.6s ease-in-out infinite}
+
+/* RESULT */
+.result-wrap{padding-top:2.2rem}
+.result-header{text-align:center;padding:2rem 1.2rem 2.2rem;background:var(--surface);border:.5px solid var(--border);border-radius:16px;margin-bottom:1.2rem}
+.result-label{font-size:.63rem;letter-spacing:.24em;color:var(--muted);margin-bottom:1rem}
+.result-type{font-size:1.45rem;font-weight:700;line-height:1.5;margin-bottom:.5rem}
+.result-one{font-size:.85rem;color:#93a3bd;line-height:1.9;margin-top:.9rem}
+
+/* MAP */
+.map-wrap{background:var(--surface);border:.5px solid var(--border);border-radius:14px;padding:1.4rem 1.2rem 1.1rem;margin-bottom:1.2rem}
+.map{position:relative;width:100%;max-width:300px;aspect-ratio:1;margin:0 auto;border-radius:10px;background:var(--faint);overflow:hidden}
+.map-q{position:absolute;display:flex;align-items:center;justify-content:center;font-size:.58rem;color:#44536b;text-align:center;line-height:1.45;padding:3px;pointer-events:none}
+.map-line{position:absolute;background:rgba(120,180,255,.13)}
+.map-dot{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--warm);box-shadow:0 0 0 4px rgba(232,115,74,.22);transform:translate(-50%,50%);transition:.6s cubic-bezier(.22,.68,0,1.1)}
+.map-axis-x,.map-axis-y{font-size:.62rem;color:var(--muted);text-align:center;letter-spacing:.08em}
+.map-axis-x{margin-top:.7rem}
+.map-axis-y{margin-bottom:.6rem}
+
+/* SCORES */
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.2rem}
+.score-card{background:var(--surface);border:.5px solid var(--border);border-radius:12px;padding:1.1rem}
+.score-name{font-size:.72rem;color:var(--muted);margin-bottom:.5rem;letter-spacing:.06em}
+.score-val{font-size:1.7rem;font-weight:300;line-height:1}
+.score-unit{font-size:.7rem;color:var(--muted);margin-left:.2rem}
+.score-bar{height:3px;background:var(--faint);border-radius:2px;overflow:hidden;margin-top:.7rem}
+.score-fill{height:100%;border-radius:2px;transition:width .8s ease}
+.score-note{font-size:.68rem;color:var(--muted);margin-top:.55rem;line-height:1.6}
+
+/* SECTIONS */
+.sec{background:var(--surface);border:.5px solid var(--border);border-radius:14px;padding:1.4rem;margin-bottom:1rem}
+.sec-label{font-size:.63rem;letter-spacing:.2em;color:var(--muted);margin-bottom:.9rem}
+.sec-body{font-size:.86rem;line-height:2.05;color:#93a3bd}
+.sec-body strong{color:var(--text);font-weight:500}
+.scene{display:flex;flex-direction:column;gap:.7rem}
+.scene-row{display:flex;gap:.75rem;align-items:flex-start;font-size:.84rem;line-height:1.8;color:#93a3bd}
+.scene-mark{color:var(--warm);flex-shrink:0;font-size:.7rem;margin-top:.45rem}
+.step{counter-reset:s;display:flex;flex-direction:column;gap:1rem}
+.step-row{display:flex;gap:.9rem;align-items:flex-start}
+.step-num{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:rgba(232,115,74,.15);color:var(--warm);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.step-txt{font-size:.85rem;line-height:1.9;color:#93a3bd}
+.step-txt b{display:block;color:var(--text);font-weight:500;margin-bottom:.15rem}
+
+/* RELIABILITY */
+.rel-box{background:var(--surface);border:.5px solid var(--border);border-radius:12px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.rel-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+.rel-label{font-size:.66rem;letter-spacing:.14em;color:var(--muted)}
+.rel-badge{font-size:.72rem;font-weight:700;padding:3px 12px;border-radius:20px}
+.rel-note{font-size:.72rem;line-height:1.8;color:var(--muted)}
+
+.src{background:var(--surface);border:.5px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:1rem}
+.src p{font-size:.75rem;color:var(--muted);line-height:1.95}
+.btn-retry{width:100%;padding:.9rem;font-size:.82rem;font-family:'Noto Sans JP',sans-serif;border:.5px solid var(--border);border-radius:10px;background:transparent;color:var(--muted);cursor:pointer;margin-top:.4rem}
+.btn-retry:hover{color:var(--text);border-color:var(--border2)}
+.quote{font-size:1.02rem;line-height:1.85;color:#fff;font-weight:500;padding:1rem 1.1rem;background:rgba(232,115,74,.08);border-radius:10px;border-left:2px solid var(--warm)}
+.micro{font-size:.68rem;line-height:1.75;color:var(--muted);margin-top:.9rem}
+.micro strong{color:#93a3bd;font-weight:500}
+.sub-list{display:flex;flex-direction:column;gap:1.05rem}
+.sub-row{}
+.sub-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.45rem}
+.sub-name{font-size:.86rem;color:var(--text);font-weight:500}
+.sub-ax{font-size:.64rem;letter-spacing:.06em;margin-right:.55rem;font-weight:700}
+.sub-val{font-size:1.05rem;font-weight:300}
+.sub-bar{height:3px;background:var(--faint);border-radius:2px;overflow:hidden}
+.sub-fill{height:100%;border-radius:2px;transition:width .8s ease}
+.sub-desc{font-size:.72rem;color:var(--muted);line-height:1.7;margin-top:.45rem}
+.sub-flag{display:inline-block;font-size:.63rem;font-weight:700;padding:1px 8px;border-radius:20px;margin-left:.5rem;white-space:nowrap}
+.sub-flag.low{background:rgba(232,115,74,.18);color:#E8734A}
+.sub-flag.high{background:rgba(94,203,138,.16);color:#5ECB8A}
+@media(max-width:400px){.score-grid{grid-template-columns:1fr}.top h1{font-size:1.32rem}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- TOP -->
+<section id="topPage" class="fade-in">
+  <div class="top">
+    <div class="top-eye">AI × PSYCHOLOGY</div>
+    <h1>かわいい系？ かっこいい系？<br>癒し系？ 魅力タイプ診断</h1>
+    <div class="top-sub">親しみ × 存在感 ／ 全20問 ／ 約3分</div>
+  </div>
+
+  <div class="warn-box">
+    <strong style="color:#c8d4e6">はじめる前に、3つだけ。</strong><br>
+    ・答えるのはご自身の主観なので、結果には幅が出ます。<br>
+    ・これは見た目の診断ではありません。ふだんの振る舞いから「どんな魅力が外に出ているか」を見る目安です。<br>
+    ・受け取り方を決めるのは、いつもご本人です。
+  </div>
+
+  <div class="axis-box">
+    <h4>この診断でわかること</h4>
+    <div class="axis-list">
+      <div class="axis-row"><span class="axis-tag" style="background:rgba(242,167,184,.18);color:#F2A7B8">01</span><span>あなたの魅力が「親しみ」と「存在感」のどちら寄りに出ているか</span></div>
+      <div class="axis-row"><span class="axis-tag" style="background:rgba(242,167,184,.18);color:#F2A7B8">02</span><span>周りがあなたを、かわいい・かっこいい・癒しのどんな言葉で見ていそうか</span></div>
+      <div class="axis-row"><span class="axis-tag" style="background:rgba(242,167,184,.18);color:#F2A7B8">03</span><span>6つの要素のうち、いま魅力として出ているところと、まだ眠っているところ</span></div>
+    </div>
+  </div>
+
+  <div class="axis-box">
+    <h4>受け取れるもの</h4>
+    <div class="axis-list">
+      <div class="axis-row"><span class="axis-tag" style="background:rgba(143,184,232,.18);color:#8FB8E8">結果</span><span>親しみと存在感、6つの要素から導く、あなたの魅力タイプ</span></div>
+      <div class="axis-row"><span class="axis-tag" style="background:rgba(143,184,232,.18);color:#8FB8E8">行動</span><span>魅力をもう一段引き出す、具体的な手順3つ（いちばん眠っている1か所だけ）</span></div>
+      <div class="axis-row"><span class="axis-tag" style="background:rgba(143,184,232,.18);color:#8FB8E8">場面</span><span>初対面／職場や学校／恋愛 の3場面での見え方</span></div>
+    </div>
+  </div>
+
+  <div class="axis-box">
+    <h4>その結果、こうなります</h4>
+    <div class="axis-list">
+      <div class="axis-row"><span class="axis-tag" style="background:rgba(255,217,160,.18);color:#FFD9A0">→</span><span>「自分の魅力って何だろう」に、自分の言葉で答えられるようになります</span></div>
+      <div class="axis-row"><span class="axis-tag" style="background:rgba(255,217,160,.18);color:#FFD9A0">→</span><span>無理に別のタイプを目指すのではなく、今ある魅力を伸ばす方向がわかります</span></div>
+      <div class="axis-row"><span class="axis-tag" style="background:rgba(255,217,160,.18);color:#FFD9A0">→</span><span>「怖そう」「頼りない」など、意図しない見え方をされる理由に気づけます</span></div>
+    </div>
+  </div>
+
+  <div class="intro-body">
+    <p>職場、友だち、家族、恋愛。いちばん長く過ごしている人間関係を思い浮かべて、<strong style="color:#c8d4e6">ふだんの自分として</strong>答えてください。「こう見られたい」ではなく、実際にやっていることで選ぶのがコツです。</p>
+    <p>年齢や性別に関係なく答えられます。「かわいい」「かっこいい」は、ここでは見た目ではなく、振る舞いから伝わる魅力のことを指しています。</p>
+    <p>選ぶと自動で次の設問に進みます。「← 前の質問」で戻れます。</p>
+  </div>
+
+  <button class="btn-start" onclick="startQuiz()">診断をはじめる</button>
+</section>
+
+<!-- QUIZ -->
+<section id="quizPage" style="display:none">
+  <div class="quiz-wrap">
+    <div class="prog-wrap">
+      <div class="prog-top">
+        <span class="axis-pill" id="axisPill"></span>
+        <span class="q-cnt" id="qCnt"></span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      <div class="basis-note" id="basisNote"></div>
+    </div>
+    <div class="q-card"><div class="q-text" id="qText"></div></div>
+    <div class="opts" id="opts"></div>
+    <div class="nav-row"><button class="btn-prev" id="btnPrev" onclick="prevQ()">← 前の質問</button></div>
+  </div>
+</section>
+
+<!-- LOADING -->
+<section id="loadingPage" style="display:none">
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>あなたの魅力を、2軸と6要素から読み取っています…</p>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section id="resultPage" style="display:none">
+  <div class="result-wrap" id="resultBody"></div>
+</section>
+
+</div>
+<script>
+// ══ 設問 ══ rev:true = 逆転項目
+// ax: C=親しみ（親和性 / Communion） G=存在感（主体性 / Agency）   sub: 下位要素（この診断での内訳）
+const QS=[
+ {id:1, ax:'C', sub:'E', basis:'親和性（感情の表出）', rev:false, q:'嬉しいことがあると、顔や声にすぐ出るほうだ'},
+ {id:2, ax:'G', sub:'J', basis:'主体性（自信）', rev:false, q:'人前で意見を求められても、落ち着いて話せる'},
+ {id:3, ax:'C', sub:'U', basis:'親和性（近づきやすさ）', rev:false, q:'初対面の人からも、よく話しかけられる'},
+ {id:4, ax:'G', sub:'W', basis:'主体性（意思決定）', rev:false, q:'みんなが迷っている場面で、自分から「こうしよう」と決めることが多い'},
+ {id:5, ax:'C', sub:'K', basis:'親和性（気配り）', rev:false, q:'相手が好きなものや、前に話していたことをよく覚えている'},
+ {id:6, ax:'G', sub:'R', basis:'主体性（自分のスタイル）', rev:false, q:'服装や持ち物に、自分なりのこだわりがある'},
+ {id:7, ax:'C', sub:'E', basis:'親和性（感情の表出・逆転）', rev:true, q:'感情は、なるべく表に出さないようにしている'},
+ {id:8, ax:'G', sub:'J', basis:'主体性（自信・逆転）', rev:true, q:'褒められても、つい「そんなことない」と否定してしまう'},
+ {id:9, ax:'C', sub:'U', basis:'親和性（受容）', rev:false, q:'相手の小さな失敗やミスを、笑って流せるほうだ'},
+ {id:10,ax:'G', sub:'W', basis:'主体性（意思決定）', rev:false, q:'大事なことは、人に流されず自分で決める'},
+ {id:11,ax:'C', sub:'K', basis:'親和性（配慮行動）', rev:false, q:'困っていそうな人がいると、自然に声をかけている'},
+ {id:12,ax:'G', sub:'R', basis:'主体性（自分のスタイル）', rev:false, q:'好きなものを聞かれたら、迷わず答えられる'},
+ {id:13,ax:'C', sub:'U', basis:'親和性（近づきやすさ・逆転）', rev:true, q:'「話しかけにくい」「怖そう」と言われたことがある'},
+ {id:14,ax:'G', sub:'J', basis:'主体性（自信）', rev:false, q:'自分の長所を、ひとつははっきり言える'},
+ {id:15,ax:'C', sub:'E', basis:'親和性（感情の表出）', rev:false, q:'人前で笑うとき、あまり遠慮しないほうだ'},
+ {id:16,ax:'G', sub:'W', basis:'主体性（意思決定・逆転）', rev:true, q:'誰かに決めてもらえると、正直ほっとする'},
+ {id:17,ax:'C', sub:'K', basis:'親和性（気配り・逆転）', rev:true, q:'人の相談に乗るのは、正直ちょっと面倒に感じる'},
+ {id:18,ax:'G', sub:'W', basis:'主体性（やり抜く力）', rev:false, q:'やると決めたことは、最後までやり切るほうだ'},
+ {id:19,ax:'C', sub:'U', basis:'親和性（安心感）', rev:false, q:'「一緒にいるとほっとする」と言われたことがある'},
+ {id:20,ax:'G', sub:'R', basis:'主体性（自分のスタイル・逆転）', rev:true, q:'周りに合わせて、好みや意見を変えることが多い'}
+];
+
+const OPTS=['まったく当てはまらない','あまり当てはまらない','どちらとも言えない','やや当てはまる','とても当てはまる'];
+
+const AX={
+  C:{name:'親しみ', color:'#F2A7B8', bg:'rgba(242,167,184,.18)'},
+  G:{name:'存在感', color:'#8FB8E8', bg:'rgba(143,184,232,.18)'}
+};
+
+// 下位要素（この診断での内訳。確立された下位尺度ではありません）
+const SUB={
+  E:{ax:'C', name:'表情', desc:'気持ちが外に出ているか。嬉しさが顔や声に出る、遠慮せずに笑う、感情を隠しすぎない。'},
+  U:{ax:'C', name:'近づきやすさ', desc:'構えずに近づけるか。話しかけられる、失敗を笑って流す、一緒にいてほっとする。'},
+  K:{ax:'C', name:'気配り', desc:'相手を見ているか。好きなものを覚えている、困っている人に声をかける、相談に乗れる。'},
+  J:{ax:'G', name:'自信', desc:'自分を肯定できているか。人前で落ち着いて話す、長所を言える、褒め言葉を受け取れる。'},
+  W:{ax:'G', name:'意志', desc:'自分で決めて動けるか。迷う場面で決める、流されない、やり切る。'},
+  R:{ax:'G', name:'自分らしさ', desc:'「自分」の輪郭があるか。こだわりがある、好きなものを言える、周りに合わせすぎない。'}
+};
+
+// ══ 魅力タイプ（親しみ3帯 × 存在感3帯）══ キー = 親しみの帯 + 存在感の帯
+const TYPES={
+ HH:{name:'頼れるのに親しみやすい、憧れ系', color:'#F5C98A',
+  one:'親しみも存在感も、しっかり外に出ています。かっこよさと話しかけやすさが同居していて、「近くにいたい」と「ついていきたい」を同時に思わせる位置です。',
+  guess:'「あんなふうになりたいな。……でも、話すと意外と気さくなんだよね」',
+  guessWhy:'存在感だけが強いと、人は一歩引きます。親しみだけだと、頼りにはされにくくなります。両方がそろうと、相手は「尊敬できるのに、距離が遠くない人」として見ます。人が集まりやすいのはこの位置です。',
+  scene:['後輩や年下から、よく相談される','初めての場でも、気づくと中心にいることがある','「かっこいい」と「かわいい」の両方を言われたことがある']},
+ HM:{name:'そばにいると和む、癒し系', color:'#B8E0C8',
+  one:'親しみがはっきり届いていて、存在感はほどよく控えめです。相手は構えずにあなたの隣にいられます。一緒にいると肩の力が抜ける、と感じさせる位置です。',
+  guess:'「この人といると、なんか落ち着く」',
+  guessWhy:'人は、自分を評価してこない相手のそばで安心します。あなたの親しみは強すぎず、存在感も圧をかけない程度なので、相手は「ここでは頑張らなくていい」と感じます。それが癒しの正体です。',
+  scene:['「話しやすい」「ほっとする」とよく言われる','グループの中で、自然と聞き役やつなぎ役になっている','疲れているときに、あなたに連絡してくる人がいる']},
+ HL:{name:'守ってあげたくなる、かわいい系', color:'#F2A7B8',
+  one:'親しみがまっすぐ外に出ていて、存在感は控えめです。気持ちが表情に出て、相手に圧をかけない。相手のほうから、自然に手を差し伸べたくなる位置です。',
+  guess:'「なんか放っておけないんだよね」',
+  guessWhy:'かわいさは、相手に「近づきたい、かまいたい」という気持ちを起こさせると言われています。気持ちが素直に表に出ていて、構えずに近づける人ほど、その反応は起きやすくなります。あなたはその条件がそろっています。',
+  scene:['「かわいい」と言われることが、年齢に関係なくある','何かを頼むと、相手が喜んで引き受けてくれる','自分で決めるより、誰かに決めてもらうほうが楽だと感じる']},
+ MH:{name:'背中で語る、かっこいい系', color:'#8FB8E8',
+  one:'存在感がはっきり出ていて、親しみはほどよく抑えめです。自分で決めて動き、自分のスタイルを持っている。相手は、あなたを少し見上げるように見ています。',
+  guess:'「かっこいいな。……話しかけていいのかな」',
+  guessWhy:'自信と意志が外に出ていると、人は「この人には軸がある」と感じます。それがかっこよさとして受け取られます。ただ、親しみが少し控えめなぶん、相手は近づくタイミングを測っています。',
+  scene:['「頼りになる」「芯がある」と言われる','初対面では、少し緊張されることがある','仲良くなってから「最初は怖かった」と言われたことがある']},
+ MM:{name:'ほどよく自然体な、ナチュラル系', color:'#C8C0B0',
+  one:'親しみも存在感も、ちょうど真ん中あたりです。どんな場にもなじめる、偏りのない魅力です。そのぶん、「あなたらしさ」の輪郭はまだ淡く見えています。',
+  guess:'「感じのいい人。……どんな人かは、もう少し知りたいかな」',
+  guessWhy:'どちらにも振れていないことは、どんな相手とも衝突しにくい強みです。一方で、人は何か一つ突き抜けたものがある人を記憶します。どちらか一つを伸ばすだけで、魅力の方向がはっきりします。',
+  scene:['どのグループにいても、なんとなくなじめる','「落ち着いている」とも「明るい」とも言われる','自分の魅力を聞かれると、少し答えに迷う']},
+ ML:{name:'穏やかで控えめな、素朴系', color:'#D8C8A8',
+  one:'親しみはほどよく出ていて、存在感はかなり控えめです。前に出ることは少ないけれど、穏やかで、そばにいて疲れない。飾らない魅力の位置です。',
+  guess:'「いい人だよね。……もっと話してみたいな」',
+  guessWhy:'控えめな人は、相手に安心を与える一方で、情報が少ないぶん印象が残りにくくなります。あなたの魅力はありますが、相手はまだその全体を見られていない状態です。',
+  scene:['大勢の場より、少人数のほうが自分らしくいられる','「静かだけど、話すと面白い」と言われたことがある','自分から前に出るより、誰かの隣にいるほうが落ち着く']},
+ LH:{name:'近寄りがたいほど、クール系', color:'#7F9FC8',
+  one:'存在感はとても強く、親しみはあまり外に出ていません。自信と意志がはっきりしていて、かっこいいけれど、相手はどう近づけばいいか迷っている位置です。',
+  guess:'「かっこいい。でも、ちょっと近寄りがたい」',
+  guessWhy:'存在感が強く、気持ちが表情に出ないと、人は「隙がない」と感じます。尊敬はされますが、気軽に話しかけられることは少なくなります。多くの場合、あなたが冷たいのではなく、あたたかさが外に出ていないだけです。',
+  scene:['「クール」「落ち着いてる」と言われるが、本当はそうでもない','初対面で話しかけられることが少ない','仲良くなると「意外と優しいんだね」と驚かれる']},
+ LM:{name:'つかみどころのない、ミステリアス系', color:'#A898C0',
+  one:'親しみも存在感も、控えめに出ています。自分のことをあまり見せないぶん、相手はあなたのことが気になりながらも、どんな人かをつかみかねている位置です。',
+  guess:'「何を考えてるんだろう。……ちょっと気になる」',
+  guessWhy:'情報が少ない相手には、人は想像をふくらませます。それはミステリアスな魅力になりますが、長く続くと「よくわからない人」のまま止まってしまいます。一つ見せるだけで、相手の見方ははっきり変わります。',
+  scene:['「何考えてるかわからない」と言われたことがある','自分のことを話すのは、少し苦手だ','親しくなるまでに、時間がかかるほうだ']},
+ LL:{name:'魅力がまだ眠っている、原石系', color:'#B4A07B',
+  one:'親しみも存在感も、いまはまだ外にほとんど出ていません。魅力がないのではなく、相手に見える場所に出ていない状態です。いちばん「伸びしろ」が大きい位置です。',
+  guess:'「……まだ、よくわからない人かな」',
+  guessWhy:'これは魅力の評価ではありません。親しみの材料も、存在感の材料も、外にほとんど出ていないため、相手はまだ判断できずにいます。どちらか一つを出すだけで、見え方ははっきり変わります。',
+  scene:['自分の魅力は何かと聞かれても、思いつかない','人といると、少し気を張ってしまう','今は、人にどう見えるかにあまりエネルギーを使えていない']}
+};
+
+// ══ 強み（最も高い下位要素で出し分け）══
+const STRENGTH={
+ E:'あなたの強みは<strong>表情</strong>です。嬉しさや楽しさが、顔や声にそのまま出る。相手はあなたの反応を見て、自分まで少し嬉しくなります。かわいさや親しみやすさの一番の入口は、ここです。',
+ U:'あなたの強みは<strong>近づきやすさ</strong>です。構えずに話しかけられ、小さな失敗も笑って流せる。相手は、あなたの前では頑張らなくていいと感じます。癒しと呼ばれる魅力の中心は、これです。',
+ K:'あなたの強みは<strong>気配り</strong>です。好きなものを覚えていて、困っている人に自然に声をかけられる。相手は「見てくれている」と感じます。長く付き合うほど、この魅力は深く伝わります。',
+ J:'あなたの強みは<strong>自信</strong>です。人前でも落ち着いて話し、自分の長所を言える。相手は、あなたのそばにいると安心して任せられると感じます。かっこよさの土台は、ここにあります。',
+ W:'あなたの強みは<strong>意志</strong>です。迷う場面で決め、流されず、やり切れる。相手は「この人には軸がある」と感じます。頼りにされる魅力は、ここから生まれます。',
+ R:'あなたの強みは<strong>自分らしさ</strong>です。こだわりがあり、好きなものをまっすぐ言える。相手は、あなたを「ほかの誰とも違う人」として覚えます。記憶に残る魅力の正体は、これです。'
+};
+
+// ══ 伸ばし方（最も低い下位要素で出し分け）══
+const RX={
+ E:{label:'表情', steps:[
+   ['嬉しいときは、声を一段上げる','「おいしい！」「うれしい！」を、いつもより少しだけ大きく言う。気持ちは、思っているより外に伝わっていません。'],
+   ['笑うときに、口元を隠さない','手で隠す、うつむく、を一回やめてみる。笑顔が見えるだけで、相手はあなたとの距離を近く感じます。'],
+   ['感想を一言、先に言う','「それ、いいね」「びっくりした」。考えをまとめる前に、感じたことを一言だけ出すと、表情が自然についてきます。']]},
+ U:{label:'近づきやすさ', steps:[
+   ['目が合ったら、口角を少し上げる','話しかけるより前に、「話しかけていいよ」の合図を出す。それだけで、相手から声をかけられやすくなります。'],
+   ['自分の小さな失敗を、一つ笑って話す','「今朝、ここで転びそうになって」。完璧に見える人より、少し隙のある人のほうが近づきやすく感じられます。'],
+   ['相手のミスに、「大丈夫だよ」を先に言う','指摘や解決より先に、一言だけ。受け止めてもらえる人のそばに、人は安心して集まります。']]},
+ K:{label:'気配り', steps:[
+   ['相手が話したことを、一つ覚えておく','「このあいだ言ってた〇〇、どうだった？」。覚えていてくれたことは、何よりの気配りとして伝わります。'],
+   ['困っていそうな人に、一言だけかける','手伝えなくてもかまいません。「大丈夫？」の一言で、相手は見てもらえていると感じます。'],
+   ['自分の話より、質問を一つ多くする','話題の中心を、少しだけ相手に渡す。「あなたの話を聞きたい」という姿勢は、それだけで魅力になります。']]},
+ J:{label:'自信', steps:[
+   ['褒められたら、「ありがとう」で止める','「そんなことない」をつけずに、受け取るだけにする。否定しないことが、自信のある人の一番わかりやすいしぐさです。'],
+   ['自分の長所を、一つ書き出しておく','小さなことでかまいません。言葉にできる長所が一つあると、人前での話し方が落ち着きます。'],
+   ['話すときに、語尾まで言い切る','「〜かな、なんて」で終わらせず、「〜だと思う」で止める。言い切るだけで、存在感は一段上がって見えます。']]},
+ W:{label:'意志', steps:[
+   ['小さなことを、自分で決める','お店、メニュー、帰る時間。「どれでもいい」の代わりに一つ選ぶ。決める人は、それだけで頼もしく見えます。'],
+   ['迷ったら、先に「私はこうしたい」を言う','正解かどうかより、先に意思を出すことが大事です。周りは、意思のある人の周りに集まります。'],
+   ['やると言ったことを、一つやり切る','大きな目標でなくていいです。小さく言って、小さくやり切る。その積み重ねが「芯がある人」の印象をつくります。']]},
+ R:{label:'自分らしさ', steps:[
+   ['「好きなもの」を一つ、すぐ言えるようにしておく','聞かれたときに迷わず答えられるものを一つ。好きなものを語る人は、それだけで輪郭がはっきりします。'],
+   ['持ち物か服に、一つだけこだわる','色、形、ブランド、どれか一つで十分です。「あなたっぽいね」と言われるものが一つあると、印象に残ります。'],
+   ['周りと違う意見を、やわらかく一つ出す','「私はちょっと違って、〜が好き」。合わせてばかりだと、相手はあなたがどんな人か知らないまま終わります。']]}
+};
+
+// ══ 場面別の見え方 ══
+const SCENES=[
+ {name:'初対面の場', map:{
+   HH:'話しかけやすく、しかも頼れそう、という第一印象が残ります。自然と人が寄ってくる場面です。',
+   HM:'「感じのいい人」として、すぐに打ち解けられます。気づくと、相手のほうからいろいろ話してくれています。',
+   HL:'表情がやわらかく、構えずに近づいてもらえます。「かわいい人」という印象が最初に残りやすい場面です。',
+   MH:'落ち着いていて、しっかりした人に見えます。少し緊張されることもあるので、最初に笑顔を一つ見せると距離が縮まります。',
+   MM:'悪い印象はなく、自然になじめます。好きなものを一つ話すと、記憶に残りやすくなります。',
+   ML:'穏やかな人として覚えられますが、印象は控えめです。質問を一つ多くすると、相手があなたに関心を持ちはじめます。',
+   LH:'かっこいい人に見えますが、話しかけにくいと思われやすい場面です。目が合ったら口角を上げる、だけで大きく変わります。',
+   LM:'「どんな人だろう」と気にされますが、判断材料が少ない状態です。自分のことを一つだけ話すと、印象が動きます。',
+   LL:'まだ相手に伝わる情報が少ない場面です。笑顔か、好きなものの話か、どちらか一つを出すところから始めてください。'}},
+ {name:'職場や学校', map:{
+   HH:'頼りにされ、相談もされる位置です。抱え込みすぎないように、ときどき人に任せることも覚えておくと長く続きます。',
+   HM:'チームの空気をやわらげる存在になっています。あなたがいると、場がぎすぎすしにくくなります。',
+   HL:'かわいがられ、助けてもらいやすい位置です。ときどき自分から決めて動くと、「頼れる」の評価も加わります。',
+   MH:'任される、頼られる位置です。親しみを一つ足すと、「かっこいい上に話しやすい人」に変わります。',
+   MM:'誰とでもうまくやれる、安定した位置です。得意なことを一つはっきり見せると、評価が一段上がります。',
+   ML:'穏やかで、周りを疲れさせない人として見られています。意見を一つ出すと、存在感がぐっと増します。',
+   LH:'できる人として一目置かれますが、少し距離を感じられがちです。雑談を一つ増やすだけで、周りの反応が変わります。',
+   LM:'何を考えているのか、周りがつかみかねている位置です。自分の考えを一言だけ先に言うと、信頼が早く積み上がります。',
+   LL:'まだ周りがあなたの良さを知らない段階です。小さな仕事を一つやり切って見せるのが、いちばんの近道です。'}},
+ {name:'恋愛や、気になる人の前', map:{
+   HH:'尊敬と親しみを同時に向けられやすい位置です。ときどき弱いところも見せると、相手との距離がさらに縮まります。',
+   HM:'「一緒にいると落ち着く人」として、長く大切にされやすい位置です。ときどき自分の希望を言うと、恋愛の空気が生まれます。',
+   HL:'相手が守りたくなる、かまいたくなる位置です。自分の好きなものを語ると、「かわいい」に「気になる」が加わります。',
+   MH:'憧れられやすい位置です。好意を言葉や表情で少し見せると、相手は安心して近づけます。',
+   MM:'感じのいい人として好印象ですが、決め手にはなりにくい位置です。どちらか一つの魅力を、はっきり出してみてください。',
+   ML:'穏やかさは伝わっていますが、相手はあなたの気持ちが読めていないかもしれません。嬉しい気持ちを一つ言葉にしてください。',
+   LH:'惹かれていても、相手は踏み込みにくい位置です。笑顔と、小さな「ありがとう」を増やすと、ぐっと近づきやすくなります。',
+   LM:'気になる存在ですが、相手は脈があるのか判断できずにいます。好意を一つ、はっきり見せると関係が動きます。',
+   LL:'相手はまだ、あなたを知る材料を受け取っていません。会う回数を増やして、少しずつ自分を見せていくところからです。'}}
+];
+
+// ══ state ══
+let cur=0, ans={};
+function show(id){document.getElementById(id).style.display='block';}
+function hide(id){document.getElementById(id).style.display='none';}
+function startQuiz(){ cur=0; ans={}; hide('topPage'); show('quizPage'); renderQ(); window.scrollTo(0,0); }
+
+function renderQ(){
+  const q=QS[cur], a=AX[q.ax];
+  const pill=document.getElementById('axisPill');
+  pill.textContent=a.name+' / '+SUB[q.sub].name; pill.style.background=a.bg; pill.style.color=a.color;
+  document.getElementById('qCnt').textContent=(cur+1)+' / '+QS.length;
+  document.getElementById('progFill').style.width=Math.round((cur/QS.length)*100)+'%';
+  document.getElementById('basisNote').textContent='参照した概念: '+q.basis;
+  document.getElementById('qText').textContent=q.q;
+  const box=document.getElementById('opts'); box.innerHTML='';
+  OPTS.forEach(function(o,i){
+    const b=document.createElement('button');
+    b.className='opt-btn'+(ans[q.id]===i+1?' selected':'');
+    b.textContent=(i+1)+'. '+o;
+    b.onclick=function(){ selectAns(i+1); };
+    box.appendChild(b);
+  });
+  document.getElementById('btnPrev').style.visibility = cur>0 ? 'visible' : 'hidden';
+}
+function selectAns(v){
+  const q=QS[cur]; ans[q.id]=v; renderQ();
+  if(cur===QS.length-1){
+    setTimeout(function(){ hide('quizPage'); show('loadingPage'); setTimeout(showResult,1600); },380);
+  } else {
+    setTimeout(function(){ cur++; renderQ(); window.scrollTo(0,0); },300);
+  }
+}
+function prevQ(){ if(cur>0){ cur--; renderQ(); window.scrollTo(0,0); } }
+
+// ══ 採点 ══
+function calcScores(a){
+  const raw={};
+  QS.forEach(function(q){ const v=a[q.id]||3; raw[q.id]= q.rev ? (6-v) : v; });
+  const aS={C:0,G:0}, aN={C:0,G:0}, sS={}, sN={};
+  Object.keys(SUB).forEach(function(k){ sS[k]=0; sN[k]=0; });
+  QS.forEach(function(q){ aS[q.ax]+=raw[q.id]; aN[q.ax]++; sS[q.sub]+=raw[q.id]; sN[q.sub]++; });
+  const pct={}, sub={};
+  ['C','G'].forEach(function(k){ pct[k]=Math.round(((aS[k]-aN[k])/(aN[k]*4))*100); });
+  Object.keys(SUB).forEach(function(k){ sub[k]=Math.round(((sS[k]-sN[k])/(sN[k]*4))*100); });
+  return {pct:pct, sub:sub};
+}
+
+function band(v){ return v>=65 ? 'H' : (v>=40 ? 'M' : 'L'); }
+function getKey(pct){ return band(pct.C)+band(pct.G); }
+
+const SUB_ORDER=['E','U','K','J','W','R'];
+function lowestSub(sub){
+  let k=SUB_ORDER[0];
+  SUB_ORDER.forEach(function(x){ if(sub[x] < sub[k]) k=x; });
+  return k;
+}
+function highestSub(sub){
+  let k=SUB_ORDER[0];
+  SUB_ORDER.forEach(function(x){ if(sub[x] > sub[k]) k=x; });
+  return k;
+}
+
+// ══ 信頼性 ══
+function calcReliability(a){
+  const vals=QS.map(function(q){ return a[q.id]||3; });
+  const same=vals.filter(function(v){ return v===vals[0]; }).length;
+  const mid=vals.filter(function(v){ return v===3; }).length;
+  const norm=QS.filter(function(q){return !q.rev;}).map(function(q){return a[q.id]||3;});
+  const revs=QS.filter(function(q){return q.rev;}).map(function(q){return a[q.id]||3;});
+  const avgN=norm.reduce(function(s,v){return s+v;},0)/norm.length;
+  const avgR=revs.reduce(function(s,v){return s+v;},0)/revs.length;
+  const contradicted = (avgN>=4.2 && avgR>=4.2) || (avgN<=1.8 && avgR<=1.8);
+  const allSameNonMid = same>=QS.length-2 && vals[0]!==3;
+  if(allSameNonMid || contradicted){
+    return {label:'要確認', color:'#E87A9A', note:'通常の設問と逆転の設問で、答えの向きが揃いすぎています。読み飛ばしがあったかもしれません。もう一度ゆっくり答えると、結果の精度が上がります。'};
+  }
+  if(mid>=12){ return {label:'参考程度', color:'#8B9BB4', note:'「どちらとも言えない」が多いため、軸の差が出にくくなっています。迷ったときは、直近3ヶ月の実際の会話を思い出して選ぶと輪郭が出ます。'}; }
+  if(mid>=7){ return {label:'中程度', color:'#4AA8E8', note:'いくつか判断に迷った項目がありますが、全体の傾向は読み取れます。'}; }
+  return {label:'高い', color:'#6FB7E8', note:'回答に一貫性があり、信頼できる結果です。'};
+}
+
+// ══ 結果描画 ══
+function showResult(){
+  hide('loadingPage'); show('resultPage');
+  const sc=calcScores(ans);
+  const key=getKey(sc.pct);
+  const t=TYPES[key];
+  let low=lowestSub(sc.sub), high=highestSub(sc.sub);
+  const flat = (sc.sub[high]-sc.sub[low]) < 10; // 差が10点未満＝目立った弱点・強みなし
+  const rel=calcReliability(ans);
+  const r=sc.pct.C, o=sc.pct.G;
+
+  let h='';
+  h+='<div class="result-header">'
+   + '<div class="result-label">診断結果 &nbsp;|&nbsp; '+key+'-'+low+'</div>'
+   + '<div class="result-type" style="color:'+t.color+'">'+t.name+'</div>'
+   + '<div class="result-one">'+t.one+'</div>'
+   + '</div>';
+
+  h+='<div class="sec" style="border-color:rgba(242,167,184,.28)">'
+   + '<div class="sec-label">あなたのことを、周りはたぶんこう思っています</div>'
+   + '<div class="quote">'+t.guess+'</div>'
+   + '<div class="sec-body" style="margin-top:.9rem">'+t.guessWhy+'</div>'
+   + '<div class="micro">※ あなたのスコアから逆算した「そう感じられやすい」という目安です。実際に言われた言葉ではありません。</div>'
+   + '</div>';
+
+  h+='<div class="map-wrap">'
+   + '<div class="map-axis-y">↑ 存在感（自分の軸が外に出ているか）</div>'
+   + '<div class="map">'
+   + '<div class="map-line" style="left:40%;top:0;width:1px;height:100%"></div>'
+   + '<div class="map-line" style="left:65%;top:0;width:1px;height:100%"></div>'
+   + '<div class="map-line" style="left:0;bottom:40%;width:100%;height:1px"></div>'
+   + '<div class="map-line" style="left:0;bottom:65%;width:100%;height:1px"></div>'
+   + '<div class="map-q" style="left:0;width:40%;top:0;height:35%">クール系</div>'
+   + '<div class="map-q" style="left:40%;width:25%;top:0;height:35%">かっこいい系</div>'
+   + '<div class="map-q" style="left:65%;width:35%;top:0;height:35%">憧れ系</div>'
+   + '<div class="map-q" style="left:40%;width:25%;top:35%;height:30%">ナチュラル系</div>'
+   + '<div class="map-q" style="left:65%;width:35%;top:35%;height:30%">癒し系</div>'
+   + '<div class="map-q" style="left:0;width:40%;bottom:0;height:40%">原石系</div>'
+   + '<div class="map-q" style="left:65%;width:35%;bottom:0;height:40%">かわいい系</div>'
+   + '<div class="map-dot" style="left:'+(5+r*0.9).toFixed(1)+'%;bottom:'+(5+o*0.9).toFixed(1)+'%"></div>'
+   + '</div>'
+   + '<div class="map-axis-x">親しみ（構えずに近づけるか） →</div>'
+   + '<div class="micro" style="text-align:center">線は「低・中・高」の境目（40点と65点）。●が、いまのあなたの位置です。</div>'
+   + '</div>';
+
+  h+='<div class="score-grid">'
+   + '<div class="score-card"><div class="score-name">親しみ</div>'
+   + '<div class="score-val" style="color:#F2A7B8">'+r+'<span class="score-unit">/100</span></div>'
+   + '<div class="score-bar"><div class="score-fill" style="background:#F2A7B8;width:'+r+'%"></div></div>'
+   + '<div class="score-note">'+(r>=65?'あたたかさや話しかけやすさが、はっきり外に出ています。':r>=40?'出てはいますが、場面や相手によってムラがあります。':'あたたかさはあっても、まだ外にあまり見えていません。')+'</div></div>'
+   + '<div class="score-card"><div class="score-name">存在感</div>'
+   + '<div class="score-val" style="color:#8FB8E8">'+o+'<span class="score-unit">/100</span></div>'
+   + '<div class="score-bar"><div class="score-fill" style="background:#8FB8E8;width:'+o+'%"></div></div>'
+   + '<div class="score-note">'+(o>=65?'自信や意志、自分らしさが、はっきり外に出ています。':o>=40?'出てはいますが、場面や相手によってムラがあります。':'自分の軸はあっても、まだ周りにあまり見えていません。')+'</div></div>'
+   + '</div>';
+
+  // 境目に近いときの注記
+  (function(){
+    function nb(v){ // 境目から±5点以内なら、隣の帯を返す
+      if(Math.abs(v-65)<=5) return v>=65?'M':'H';
+      if(Math.abs(v-40)<=5) return v>=40?'L':'M';
+      return null;
+    }
+    const alt=[];
+    const bs=band(r), ba=band(o), ns=nb(r), na=nb(o);
+    if(ns) alt.push({ax:'親しみ', v:r, key:ns+ba});
+    if(na) alt.push({ax:'存在感', v:o, key:bs+na});
+    if(alt.length){
+      h+='<div class="rel-box" style="border-color:rgba(255,217,160,.35)"><div class="rel-top"><span class="rel-label">境目に近い結果です</span></div><div class="rel-note">';
+      alt.forEach(function(x){
+        h+='<strong style="color:#c8d4e6">'+x.ax+'（'+x.v+'点）</strong>が、タイプの境目のすぐ近くにあります。答え方が少し違えば「<strong style="color:#c8d4e6">'+TYPES[x.key].name+'</strong>」になっていた可能性があります。<br>';
+      });
+      h+='どちらのタイプの説明にも、思い当たるところがあるかもしれません。少し時間をおいてもう一度受けると、傾向がはっきりします。</div></div>';
+    }
+  })();
+
+  h+='<div class="sec"><div class="sec-label">6つの内訳 — どこが魅力として出ているか</div><div class="sub-list">';
+  SUB_ORDER.forEach(function(k){
+    const s=SUB[k], v=sc.sub[k], col=AX[s.ax].color;
+    const mark = flat ? '' : (k===low ? '<span class="sub-flag low">いちばん低い</span>' : (k===high ? '<span class="sub-flag high">いちばん高い</span>' : ''));
+    h+='<div class="sub-row">'
+     + '<div class="sub-head"><span class="sub-name"><span class="sub-ax" style="color:'+col+'">'+AX[s.ax].name+'</span>'+s.name+'</span>'
+     + '<span class="sub-val" style="color:'+col+'">'+v+'</span></div>'
+     + '<div class="sub-bar"><div class="sub-fill" style="background:'+col+';width:'+v+'%"></div></div>'
+     + '<div class="sub-desc">'+s.desc+mark+'</div>'
+     + '</div>';
+  });
+  h+='</div><div class="micro">※ この6つの内訳は、20問を意味のまとまりで分けた<strong>この診断独自の区分</strong>です。心理学で確立された下位尺度ではありません。2軸（親しみ・存在感）のほうが、研究の裏づけがある部分です。</div></div>';
+
+  h+='<div class="rel-box"><div class="rel-top">'
+   + '<span class="rel-label">回答の信頼性</span>'
+   + '<span class="rel-badge" style="background:'+rel.color+'22;color:'+rel.color+'">'+rel.label+'</span>'
+   + '</div><div class="rel-note">'+rel.note+'</div></div>';
+
+  h+='<div class="sec"><div class="sec-label">こんな場面、心当たりはありませんか</div><div class="scene">';
+  t.scene.forEach(function(s){ h+='<div class="scene-row"><span class="scene-mark">●</span><span>'+s+'</span></div>'; });
+  h+='</div></div>';
+
+  h+='<div class="sec"><div class="sec-label">場面別の見え方</div><div class="step">';
+  SCENES.forEach(function(sc2){
+    h+='<div class="step-row"><div class="step-num" style="background:rgba(242,167,184,.15);color:#F2A7B8">◇</div>'
+     + '<div class="step-txt"><b>'+sc2.name+'</b>'+sc2.map[key]+'</div></div>';
+  });
+  h+='</div></div>';
+
+  h+='<div class="sec"><div class="sec-label">いま効いているもの</div><div class="sec-body">'
+   + (flat ? '6つの要素が、ほぼ同じ高さにそろっています（いちばん高い要素と低い要素の差が10点未満）。突出も欠けもない状態です。まずはどれか一つを選んで伸ばすと、見え方に輪郭が出ます。' : STRENGTH[high])
+   + '</div></div>';
+
+  const rx=RX[low];
+  h+='<div class="sec" style="border-color:rgba(242,167,184,.28)"><div class="sec-label">'+(flat?'次の一歩 — 目立った弱点はありません':'次の一歩 — 伸ばす場所は「'+rx.label+'」ひとつです')+'</div>'
+   + '<div class="sec-body" style="margin-bottom:1.1rem">'+(flat?'6つの差が小さく、はっきりした弱点はありませんでした。あえて一つ選ぶなら、いちばん点が低かった<strong>'+rx.label+'</strong>（'+sc.sub[low]+'点）から動かしてみてください。':'6つのうち、いちばん眠っているのが<strong>'+rx.label+'</strong>（'+sc.sub[low]+'点）でした。')+'別のタイプを目指す必要はありません。ここを少し外に出すだけで、今ある魅力がもう一段はっきり伝わります。</div>'
+   + '<div class="step">';
+  rx.steps.forEach(function(s,i){ h+='<div class="step-row"><div class="step-num" style="background:rgba(143,184,232,.15);color:#8FB8E8">'+(i+1)+'</div><div class="step-txt"><b>'+s[0]+'</b>'+s[1]+'</div></div>'; });
+  h+='</div></div>';
+
+  h+='<div class="src"><div class="sec-label">この診断の土台</div>'
+   + '<p><strong style="color:#c8d4e6">分野：社会心理学・パーソナリティ心理学</strong><br>'
+   + '2軸の枠組みは、人の印象や性格を<strong style="color:#c8d4e6">親和性（Communion）</strong>と<strong style="color:#c8d4e6">主体性（Agency）</strong>の2つで捉える考え方を参照しています。Abele と Wojciszke らは、人が自分や他人を評価するとき、この2つが基本の次元になることを報告しています（2007）。この診断では、親和性を「親しみ」、主体性を「存在感」と呼んでいます。</p>'
+   + '<p style="margin-top:.9rem">「かわいさ」については、Sherman と Haidt が、かわいいと感じることは相手に「近づきたい、かかわりたい」という気持ちを起こさせる、と論じています（2011）。</p>'
+   + '<p style="margin-top:.9rem">ただし、<strong style="color:#c8d4e6">かわいい系・かっこいい系・癒し系といったタイプ分けは、研究で定義された分類ではありません</strong>。2軸の組み合わせに、日常の言葉を当てはめたこの診断独自の対応づけです。個々の設問も、これらの概念を参照して作成した独自項目です。</p>'
+   + '<p style="margin-top:.9rem">結果は傾向の可視化であり、見た目や人としての価値の評価でも、臨床的な診断でもありません。今ある魅力をどう伸ばすかを考えるための目安としてお使いください。</p></div>';
+
+  h+='<button class="btn-retry" onclick="location.reload()">← もう一度やってみる</button>';
+
+  document.getElementById('resultBody').innerHTML=h;
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
